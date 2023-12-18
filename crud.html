@@ -1,0 +1,163 @@
+<html>
+  <head>
+    <title>Your Tiket</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <script>
+      function tiket() {
+        var tujuan = document.myform.tujuan.value;
+        if (tujuan == "Jakarta") {
+          var harga_tiket = 100000;
+        } else if (tujuan == "Cirebon") {
+          var harga_tiket = 150000;
+        } else if (tujuan == "Tasikmalaya") {
+          var harga_tiket = 200000;
+        } else {
+          var harga_tiket = 0;
+        }
+        document.myform.harga_tiket.value = harga_tiket;
+        var jumlah_tiket = document.myform.jumlah_tiket.value;
+        var sub_total = harga_tiket * jumlah_tiket;
+        document.myform.sub_total.value = sub_total;
+        var member = document.myform.member.value;
+        if (member == "Yes") {
+          var diskon = 0.1 * sub_total;
+        } else {
+          var diskon = 0;
+        }
+
+        document.myform.diskon.value = diskon;
+
+        var total_bayar = sub_total - diskon;
+        document.myform.total_bayar.value = total_bayar;
+      }
+    </script>
+    <script>
+      var storageKey = "inventoryData";
+
+      function clearFields() {
+        document.getElementById("kode_pemesanan").value = "";
+        document.getElementById("nama_pemesan").value = "";
+        document.getElementById("tujuan").value = "";
+        document.getElementById("jumlah_tiket").value = "";
+        document.getElementById("member").value = "";
+        document.getElementById("harga_tiket").value = "";
+        document.getElementById("sub_total").value = "";
+        document.getElementById("diskon").value = "";
+        document.getElementById("total_bayar").value = "";
+      }
+
+      function createItem() {
+        var kode_pemesanan = document.getElementById("kode_pemesanan").value;
+        var nama_pemesan = document.getElementById("nama_pemesan").value;
+        var tujuan = document.getElementById("tujuan").value;
+        var jumlah_tiket = document.getElementById("jumlah_tiket").value;
+        var member = document.getElementById("member").value;
+        var harga_tiket = document.getElementById("harga_tiket").value;
+        var sub_total = document.getElementById("sub_total").value;
+        var diskon = document.getElementById("diskon").value;
+        var total_bayar = document.getElementById("total_bayar").value;
+
+        var inventory = JSON.parse(localStorage.getItem(storageKey)) || [];
+        var exists = inventory.some(item => item.kode_pemesanan === kode_pemesanan);
+        if (exists) {
+          alert("Kode pemesanan sudah ada!");
+          return;
+        }
+        inventory.push({
+          kode_pemesanan: kode_pemesanan,
+          nama_pemesan: nama_pemesan,
+          tujuan: tujuan,
+          jumlah_tiket: jumlah_tiket,
+          member: member,
+          harga_tiket: harga_tiket,
+          sub_total: sub_total,
+          diskon: diskon,
+          total_bayar: total_bayar
+        });
+        localStorage.setItem(storageKey, JSON.stringify(inventory));
+        readItem();
+        clearFields();
+        }
+
+        function readItem() {
+        var inventory = JSON.parse(localStorage.getItem(storageKey)) || [];
+        var output = '<table class="table table-hover"><tr><td>Kode Pemesanan</td><td>Nama pemesan</td><td>Tujuan</td><td>Jumlah Tiket</td><td>Member</td><td>Harga Tiket</td><td>Sub Total</td><td>Diskon</td><td>Total Bayar</td></tr>';
+        inventory.forEach(item => {output +=`
+          <tr>
+            <td>${item.kode_pemesanan}</td>
+            <td>${item.nama_pemesan}</td>
+            <td>${item.tujuan}</td>
+            <td>${item.jumlah_tiket}</td>
+            <td>${item.member}</td>
+            <td>${item.harga_tiket}</td>
+            <td>${item.sub_total}</td>
+            <td>${item.diskon}</td>
+            <td>${item.total_bayar}</td>
+          </tr>`;
+        });
+        output += '</table>';
+        document.getElementById("inventoryOutput").innerHTML = output;
+      }
+    </script>
+    <body>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+  <a class="navbar-brand" href="#">Javascript Project</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" href="index.html">HOME</a>
+      <a class="nav-item nav-link" href="bmi.html">BMI</a>
+      <a class="nav-item nav-link" href="crud.html">CRUD</a>
+      <a class="nav-item nav-link" href="ticket.html">TICKET</a>
+    </div>
+  </div>
+</nav>
+
+<center>
+<img src="banner.jpg" width="100%">
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3"></div>
+
+    <div class="col-sm-6">
+          <form name="myform">
+            <br /><input placeholder="Kode Pemesanan" name="kode_pemesanan" class="form-control" id="kode_pemesanan" /> <br /><input placeholder="Nama pemesan" name="nama_pemesan" class="form-control" id="nama_pemesan" /> <br /><input
+              placeholder="Tujuan (Jakarta, Cirebon, Tasikmalaya)"
+              name="tujuan"
+              class="form-control"
+              id="tujuan"
+            />
+            <br /><input placeholder="Jumlah Tiket" name="jumlah_tiket" class="form-control" id="jumlah_tiket" /> <br /><input placeholder="Member(Yes/No)" name="member" class="form-control" id="member" /> <br /><input
+              type="button"
+              value="Hitung"
+              class="btn btn-success btn-sm"
+              onclick="tiket()"
+            />
+            <input type="reset" class="btn btn-info btn-sm" />
+            <br />
+            <br />
+            <input placeholder="Harga Tiket" name="harga_tiket" class="form-control" id="harga_tiket" readonly/> <br />
+            <input placeholder="Sub Total" name="sub_total" class="form-control" id="sub_total" readonly/> <br />
+            <input placeholder="Diskon" name="diskon" class="form-control" id="diskon" readonly/> <br />
+            <input placeholder="Total Bayar" name="total_bayar" class="form-control" id="total_bayar" readonly/>
+            <br />
+            <input type="button" value="Lihat Data" class="btn btn-success btn-sm" onclick="readItem()" />
+            <input type="button" value="Tambah Data" class="btn btn-info btn-sm" onclick="createItem()" />
+            <input type="button" value="Update Data" class="btn btn-warning btn-sm" onclick="updateItem()" />
+            <input type="button" value="Hapus Data" class="btn btn-danger btn-sm" onclick="deleteItem()" />
+          </form>
+    </div>
+
+    <div class="col-sm-3"></div>  
+  </div>
+</div>
+
+<div id="inventoryOutput"></div>
+<br>
+&copy; Copyright: Javascript Project | 2023
+</body>
+</html>
